@@ -1,0 +1,79 @@
+from sklearn.linear_model import LogisticRegression
+
+class LogisticRegressionModel:
+    """
+    A logistic regression model that uses scikit-learn's LogisticRegression class.
+    
+    Parameters:
+    -----------
+    penalty : str, default='l2'
+        Used to specify the norm used in the penalization. 
+        
+    C : float, default=1.0
+        Inverse of regularization strength; must be a positive float. 
+        
+    fit_intercept : bool, default=True
+        Specifies if a constant (a.k.a. bias or intercept) should be added to the decision function.
+    
+    solver : str, {'newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'}, default='lbfgs'
+        Algorithm to use in the optimization problem.
+    
+    Attributes:
+    -----------
+    coef_ : array of shape (n_features,) or (n_targets, n_features)
+        Estimated coefficients for the linear regression problem.
+    
+    intercept_ : float or array of shape (n_targets,)
+        Independent term in the linear model. Set to 0.0 if `fit_intercept=False`.
+    
+    Examples:
+    ---------
+    >>> import numpy as np
+    >>> from sklearn.datasets import load_iris
+    >>> from sklearn.model_selection import train_test_split
+    >>> X, y = load_iris(return_X_y=True)
+    >>> X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+    >>> model = LogisticRegressionModel()
+    >>> model.fit(X_train, y_train)
+    >>> model.predict(X_test[:3])
+    array([2, 1, 0])
+    """
+    
+    def __init__(self, penalty='l2', C=1.0, fit_intercept=True, solver='lbfgs'):
+        self.penalty = penalty
+        self.C = C
+        self.fit_intercept = fit_intercept
+        self.solver = solver
+        self.model = LogisticRegression(penalty=self.penalty, C=self.C, fit_intercept=self.fit_intercept, solver=self.solver)
+    
+    def fit(self, X, y):
+        """
+        Fit the logistic regression model to the training data.
+        
+        Parameters:
+        -----------
+        X : array-like of shape (n_samples, n_features)
+            Training data.
+        
+        y : array-like of shape (n_samples,) or (n_samples, n_targets)
+            Target values.
+        """
+        self.model.fit(X, y)
+        self.coef_ = self.model.coef_
+        self.intercept_ = self.model.intercept_
+    
+    def predict(self, X):
+        """
+        Predict using the logistic regression model.
+        
+        Parameters:
+        -----------
+        X : array-like of shape (n_samples, n_features)
+            Samples.
+        
+        Returns:
+        --------
+        y : array-like of shape (n_samples,) or (n_samples, n_targets)
+            Returns predicted class labels.
+        """
+        return self.model.predict(X)

@@ -1,0 +1,82 @@
+from sklearn.tree import DecisionTreeClassifier
+
+class DecisionTreeModel:
+    """
+    A decision tree classifier that uses scikit-learn's DecisionTreeClassifier class.
+    
+    Parameters:
+    -----------
+    criterion : str, default='gini' (other options {“gini”, “entropy”, “log_loss”})
+        The function to measure the quality of a split. 
+        
+    max_depth : int or None, default=None
+        The maximum depth of the tree. 
+        
+    min_samples_split : int or float, default=2
+        The minimum number of samples required to split an internal node. 
+        
+    min_samples_leaf : int or float, default=1
+        The minimum number of samples required to be at a leaf node. 
+        
+    max_features : int, float or {'auto', 'sqrt', 'log2'}, default=None
+        The number of features to consider when looking for the best split.
+    
+    Attributes:
+    -----------
+    feature_importances_ : array of shape (n_features,)
+        The feature importances. The higher, the more important the feature.
+    
+    Examples:
+    ---------
+    >>> import numpy as np
+    >>> from sklearn.datasets import load_iris
+    >>> from sklearn.model_selection import train_test_split
+    >>> X, y = load_iris(return_X_y=True)
+    >>> X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+    >>> model = DecisionTreeModel()
+    >>> model.fit(X_train, y_train)
+    >>> model.predict(X_test[:3])
+    array([2, 1, 0])
+    """
+    
+    def __init__(self, criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1, max_features=None):
+        self.criterion = criterion
+        self.max_depth = max_depth
+        self.min_samples_split = min_samples_split
+        self.min_samples_leaf = min_samples_leaf
+        self.max_features = max_features
+        self.model = DecisionTreeClassifier(criterion=self.criterion, max_depth=self.max_depth,
+                                             min_samples_split=self.min_samples_split, min_samples_leaf=self.min_samples_leaf,
+                                             max_features=self.max_features)
+    
+    def fit(self, X, y):
+        """
+        Build a decision tree classifier from the training set (X, y).
+        
+        Parameters:
+        -----------
+        X : array-like of shape (n_samples, n_features)
+            The training input samples.
+        
+        y : array-like of shape (n_samples,) or (n_samples, n_outputs)
+            The target values (class labels).
+        """
+        self.model.fit(X, y)
+        self.feature_importances_ = self.model.feature_importances_
+    
+    def predict(self, X):
+        """
+        Predict class or regression value for X.
+        
+        Parameters:
+        -----------
+        X : array-like of shape (n_samples, n_features)
+            The input samples.
+        
+        Returns:
+        --------
+        y : array-like of shape (n_samples,) or (n_samples, n_outputs)
+            The predicted classes or regression values.
+        """
+        return self.model.predict(X)
+    #TODO: add more attributes optional
